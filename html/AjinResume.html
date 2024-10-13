@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            overflow: hidden; /* Prevent scrolling during splash */
+        }
+
+        nav {
+            background: #333;
+            color: #fff;
+            padding: 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            z-index: 1000;
+            opacity: 1;
+            animation: splashAnimation 3s ease-in-out infinite; /* Looping animation */
+        }
+
+        @keyframes splashAnimation {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        main {
+            padding: 20px;
+            display: none; /* Hide main content initially */
+        }
+
+        main img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* Slider styles */
+        .slider {
+            position: relative;
+            max-width: 800px;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .slider img {
+            width: 100%;
+            height: auto;
+        }
+
+        .btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s; /* Add animation on hover */
+        }
+
+        .btn.prev {
+            left: 10px;
+        }
+
+        .btn.next {
+            right: 10px;
+        }
+
+        .btn:active {
+            transform: scale(0.9); /* Scale down on click */
+        }
+    </style>
+</head>
+<body>
+    <div class="splash" id="splash-screen">
+        <h1>Welcome to My Website</h1>
+    </div>
+    
+    <nav>
+        <ul>
+            <li><a href="#home" onclick="showSection('home')">Home</a></li>
+            <li><a href="#about" onclick="showSection('about')">About</a></li>
+            <li><a href="#contact" onclick="showSection('contact')">Contact Us</a></li>
+            <li><a href="#projects" onclick="showSection('projects')">Projects</a></li>
+        </ul>
+    </nav>
+    
+    <main id="home">
+        <h2>Home Page</h2>
+        <img src="first.JPEG" alt="Home Image">
+        <p>This is the home page content.</p>
+    </main>
+    
+    <main id="about" style="display: none;">
+        <h2>About Page</h2>
+        <img src="https://via.placeholder.com/800x400" alt="About Image">
+        <p>This is the about page content.</p>
+    </main>
+    
+    <main id="contact" style="display: none;">
+        <h2>Contact Us Page</h2>
+        <img src="https://via.placeholder.com/800x400" alt="Contact Image">
+        <p>This is the contact page content.</p>
+    </main>
+    
+    <main id="projects" style="display: none;">
+        <h2>Projects Page</h2>
+        <div class="slider">
+            <div class="slides">
+                <div class="slide"><img src="https://via.placeholder.com/800x400?text=Project+1" alt="Project 1"></div>
+                <div class="slide"><img src="https://via.placeholder.com/800x400?text=Project+2" alt="Project 2"></div>
+                <div class="slide"><img src="https://via.placeholder.com/800x400?text=Project+3" alt="Project 3"></div>
+            </div>
+            <button class="btn prev" onclick="moveSlide(-1)">&#10094;</button>
+            <button class="btn next" onclick="moveSlide(1)">&#10095;</button>
+        </div>
+        <p>This is the projects page content.</p>
+    </main>
+
+    <script>
+        let currentSlide = 0;
+
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('main').forEach(main => main.style.display = 'none');
+            // Show the selected section
+            document.getElementById(section).style.display = 'block';
+            if (section === 'projects') {
+                updateSlider();
+            }
+        }
+
+        function moveSlide(direction) {
+            const slides = document.querySelectorAll('.slide');
+            currentSlide = (currentSlide + direction + slides.length) % slides.length; // Looping
+            updateSlider();
+        }
+
+        function updateSlider() {
+            const slidesContainer = document.querySelector('.slides');
+            const slideWidth = slidesContainer.clientWidth;
+            slidesContainer.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+        }
+
+        window.onload = function() {
+            const splash = document.getElementById('splash-screen');
+            setTimeout(() => {
+                splash.classList.add('fade-out');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    // Show the home section after splash disappears
+                    showSection('home');
+                    document.body.style.overflow = 'auto'; // Allow scrolling
+                }, 1000); // Duration of the fade-out
+            }, 2000); // Duration of splash display
+        }
+    </script>
+</body>
+</html>
